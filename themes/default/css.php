@@ -197,7 +197,8 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			echo "background-position: top;\n";
 		}
 		else {
-			echo $background_color;
+			// CHANGED BY TIM
+			echo "background: #000000 !important;\n";
 		}
 		?>
 		background-repeat: no-repeat;
