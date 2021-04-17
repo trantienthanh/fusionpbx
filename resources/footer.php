@@ -142,7 +142,7 @@
 				$settings['theme']['menu_style'] = $settings['theme']['menu_style'] != '' ? $settings['theme']['menu_style'] : 'fixed';
 				$settings['theme']['menu_position'] = $settings['theme']['menu_position'] != '' ? $settings['theme']['menu_position'] : 'top';
 				// CHANGED BY TIM
-				$settings['theme']['footer'] = $settings['theme']['footer'] != '' ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='https://www.uc8.com.au' class='footer'>UC8</a>. ".$text['theme-label-all_rights_reserved'];
+				$settings['theme']['footer'] = $settings['theme']['footer'] != '' ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].date('Y')." <a href='https://www.uc8.com.au' class='footer'>UC8</a>. ".$text['theme-label-all_rights_reserved'];
 			$view->assign('settings', $settings);
 		}
 	//document title
