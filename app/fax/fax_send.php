@@ -398,7 +398,8 @@ if (!function_exists('fax_split_dtmf')) {
 					chdir($dir_fax_temp);
 
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit");
+					// CHANGED BY TIM
+					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -f ".correct_path($fax_name).".pdf -c quit");
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
