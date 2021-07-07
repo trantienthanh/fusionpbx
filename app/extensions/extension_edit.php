@@ -367,12 +367,7 @@
 								//prepare the values for mwi account
 										if (strlen($mwi_account) > 0) {
 											if (strpos($mwi_account, '@') === false) {
-												if (count($_SESSION["domains"]) > 1) {
 													$mwi_account .= "@".$_SESSION['domain_name'];
-												}
-												else {
-													$mwi_account .= "@\$\${domain}";
-												}
 											}
 										}
 
@@ -477,9 +472,7 @@
 											$array["extensions"][$i]["nibble_account"] = $nibble_account;
 										}
 									}
-									if (strlen($mwi_account) > 0) {
-										$array["extensions"][$i]["mwi_account"] = $mwi_account;
-									}
+									$array["extensions"][$i]["mwi_account"] = $mwi_account;
 									$array["extensions"][$i]["sip_bypass_media"] = $sip_bypass_media;
 									if (permission_exists('extension_absolute_codec_string')) {
 										$array["extensions"][$i]["absolute_codec_string"] = $absolute_codec_string;
@@ -1308,9 +1301,10 @@
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
 					if(strlen($tmp) == 0){
-						$tmp = $row["destination_description"];
+						// $tmp = $row["destination_description"];
 					}
-					if(strlen($tmp) > 0){
+					if(strlen($tmp) > 0 && !in_array($tmp, $in_list)){
+						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
