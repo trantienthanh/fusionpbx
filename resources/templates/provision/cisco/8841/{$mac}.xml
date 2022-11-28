@@ -71,7 +71,7 @@
 <Caller_ID_Header ua="na">PAID-RPID-FROM</Caller_ID_Header>
 <Hold_Target_Before_Refer ua="na">No</Hold_Target_Before_Refer>
 <Dialog_SDP_Enable ua="na">No</Dialog_SDP_Enable>
-<Keep_Referee_When_Refer_Failed ua="na">No</Keep_Referee_When_Refer_Failed>
+<Keep_Referee_When_Refer_Failed ua="na">Yes</Keep_Referee_When_Refer_Failed>
 <Display_Diversion_Info ua="na">No</Display_Diversion_Info>
 <Display_Anonymous_From_Header ua="na">No</Display_Anonymous_From_Header>
 <Sip_Accept_Encoding ua="na">none</Sip_Accept_Encoding>
@@ -103,7 +103,7 @@
 <!-- RTP Parameters -->
 <RTP_Port_Min ua="na">16384</RTP_Port_Min>
 <RTP_Port_Max ua="na">16482</RTP_Port_Max>
-<RTP_Packet_Size ua="na">0.030</RTP_Packet_Size>
+<RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err ua="na">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval ua="na">0</RTCP_Tx_Interval>
 <!-- SDP Payload Types -->
@@ -124,12 +124,12 @@
 <OPUS_Codec_Name ua="na">OPUS</OPUS_Codec_Name>
 <AVT_Codec_Name ua="na">telephone-event</AVT_Codec_Name>
 <!-- NAT Support Parameters -->
-<Handle_VIA_received ua="na">No</Handle_VIA_received>
-<Handle_VIA_rport ua="na">{$spa_handle_via_rport}</Handle_VIA_rport>
+<Handle_VIA_received ua="na">Yes</Handle_VIA_received>
+<Handle_VIA_rport ua="na">Yes</Handle_VIA_rport>
 <Insert_VIA_received ua="na">No</Insert_VIA_received>
-<Insert_VIA_rport ua="na">{$spa_insert_via_rport}</Insert_VIA_rport>
-<Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
+<Insert_VIA_rport ua="na">Yes</Insert_VIA_rport>
+<Substitute_VIA_Addr ua="na">Yes</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port ua="na">Yes</Send_Resp_To_Src_Port>
 <STUN_Enable ua="na">No</STUN_Enable>
 <STUN_Test_Enable ua="na">No</STUN_Test_Enable>
 <STUN_Server ua="na"/>
@@ -181,8 +181,8 @@
 <PRT_Upload_Rule ua="na"/>
 <PRT_Upload_Method ua="na">POST</PRT_Upload_Method>
 <!-- General Purpose Parameters -->
-<GPP_A ua="na"/>
-<GPP_B ua="na"/>
+<GPP_A ua="na">GPP_A_</GPP_A>
+<GPP_B ua="na">GPP_B_</GPP_B>
 <GPP_C ua="na"/>
 <GPP_D ua="na"/>
 <GPP_E ua="na"/>
@@ -305,15 +305,21 @@
 
 {foreach $keys["line"] as $row}
 {if $row.device_key_category == "line"}
+{if $row.device_key_type == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2
+/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
+{else}
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
 
 {/if}
+{/if}
 {/foreach}
-
 
 <!-- Miscellaneous Line Key Settings -->
 <Line_ID_Mapping ua="na">Horizontal First</Line_ID_Mapping>
@@ -392,7 +398,7 @@
 <LDAP_Display_Attrs ua="na"/>
 <LDAP_Number_Mapping ua="na"/>
 <!-- Programmable Softkeys -->
-<Programmable_Softkey_Enable ua="na">No</Programmable_Softkey_Enable>
+<Programmable_Softkey_Enable ua="na">Yes</Programmable_Softkey_Enable>
 <Idle_Key_List ua="na">em_login;acd_login;acd_logout;astate;avail;unavail;redial;recents;cfwd;dnd;lcr;pickup;gpickup;unpark;em_logout;guestin;guestout;</Idle_Key_List>
 <Missed_Call_Key_List ua="na">lcr|1;miss|4;</Missed_Call_Key_List>
 <Off_Hook_Key_List ua="na">option;redial;cancel;dir;cfwd;dnd;lcr;unpark;pickup;gpickup;</Off_Hook_Key_List>
@@ -431,8 +437,8 @@
 <Subscription_Expires_1_ ua="na">600</Subscription_Expires_1_>
 <Restrict_MWI_1_ ua="na">No</Restrict_MWI_1_>
 <!-- NAT Settings -->
-<NAT_Mapping_Enable_1_ ua="na">No</NAT_Mapping_Enable_1_>
-<NAT_Keep_Alive_Enable_1_ ua="na">No</NAT_Keep_Alive_Enable_1_>
+<NAT_Mapping_Enable_1_ ua="na">Yes</NAT_Mapping_Enable_1_>
+<NAT_Keep_Alive_Enable_1_ ua="na">Yes</NAT_Keep_Alive_Enable_1_>
 <NAT_Keep_Alive_Msg_1_ ua="na">$NOTIFY</NAT_Keep_Alive_Msg_1_>
 <NAT_Keep_Alive_Dest_1_ ua="na">$PROXY</NAT_Keep_Alive_Dest_1_>
 <!-- Network Settings -->
@@ -478,7 +484,7 @@
 <Outbound_Proxy_1_ ua="na">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
 <Alternate_Proxy_1_ ua="na"/>
 <Alternate_Outbound_Proxy_1_ ua="na"/>
-<Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
+<Use_OB_Proxy_In_Dialog_1_ ua="na">No</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
 <Register_Expires_1_ ua="na">{$account.1.register_expires}</Register_Expires_1_>
@@ -498,10 +504,10 @@
 <Reversed_Auth_Realm_1_ ua="na"/>
 <SIP_URI_1_ ua="na"/>
 <!-- Audio Configuration -->
-<Preferred_Codec_1_ ua="na">G711u</Preferred_Codec_1_>
+<Preferred_Codec_1_ ua="na">G711a</Preferred_Codec_1_>
 <Use_Pref_Codec_Only_1_ ua="na">No</Use_Pref_Codec_Only_1_>
-<Second_Preferred_Codec_1_ ua="na">Unspecified</Second_Preferred_Codec_1_>
-<Third_Preferred_Codec_1_ ua="na">Unspecified</Third_Preferred_Codec_1_>
+<Second_Preferred_Codec_1_ ua="na">G722</Second_Preferred_Codec_1_>
+<Third_Preferred_Codec_1_ ua="na">G729a</Third_Preferred_Codec_1_>
 <G729a_Enable_1_ ua="na">Yes</G729a_Enable_1_>
 <G722_Enable_1_ ua="na">Yes</G722_Enable_1_>
 <G722.2_Enable_1_ ua="na">Yes</G722.2_Enable_1_>
@@ -1440,7 +1446,7 @@
 <Subscribe_Retry_Interval ua="na">30</Subscribe_Retry_Interval>
 <Number_of_Units ua="na">0</Number_of_Units>
 <Subscribe_Delay ua="na">1</Subscribe_Delay>
-<Server_Type ua="na">Broadsoft</Server_Type>
+<Server_Type ua="na">RFC3265_4235</Server_Type>
 <BLF_List_URI ua="na"/>
 <Use_Line_Keys_For_BLF_List ua="na">No</Use_Line_Keys_For_BLF_List>
 <Call_Pickup_Audio_Notification ua="na">No</Call_Pickup_Audio_Notification>
