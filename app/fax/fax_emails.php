@@ -25,8 +25,11 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-include "root.php";
+//set the include path
+$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
@@ -65,10 +68,6 @@ if (is_array($result) && @sizeof($result) != 0) {
 	$event_socket['password'] = $row['event_socket_password'];
 	unset($sql, $row);
 
-	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
-	if(strlen($fax_send_mode_default) == 0){
-		$fax_send_mode_default = 'direct';
-	}
 	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
 
 	$fax_allowed_extension_default = arr_to_map($_SESSION['fax']['allowed_extension']);
@@ -105,18 +104,13 @@ if (is_array($result) && @sizeof($result) != 0) {
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
 
-		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-		if(strlen($fax_send_mode) == 0){
-			$fax_send_mode = $fax_send_mode_default;
-		}
-
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 		if(strlen($fax_cover_font) == 0){
 			$fax_cover_font = $fax_cover_font_default;
 		}
 
 		$fax_allowed_extension = arr_to_map($_SESSION['fax']['allowed_extension']);
-		if($fax_allowed_extension == false){
+		if($fax_allowed_extension == false) {
 			$fax_allowed_extension = $fax_allowed_extension_default;
 		}
 

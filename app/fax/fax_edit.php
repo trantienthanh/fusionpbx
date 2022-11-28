@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files;
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -254,6 +257,9 @@
 				require_once "resources/footer.php";
 				return;
 			}
+
+		//sanitize the fax extension number
+			$fax_extension = preg_replace('#[^0-9]#', '', $fax_extension);
 
 		//replace the spaces with a dash
 			$fax_name = str_replace(" ", "-", $fax_name);
@@ -583,7 +589,7 @@
 		echo "    ".$text['label-accountcode']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
+		if ($action == "add") { $fax_accountcode = get_accountcode(); }
 		echo "	<input class='formfld' type='text' name='accountcode' maxlength='80' value=\"".escape($fax_accountcode)."\">\n";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";

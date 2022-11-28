@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -201,6 +204,7 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -211,7 +215,17 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(fax_file_uuid)', '*', $sql);
+	$sql = "select * from v_fax_files ";
+	$sql .= "where fax_uuid = :fax_uuid ";
+	$sql .= "and domain_uuid = :domain_uuid ";
+	if ($_REQUEST['box'] == 'inbox') {
+		$sql .= "and fax_mode = 'rx' ";
+	}
+	if ($_REQUEST['box'] == 'sent') {
+		$sql .= "and fax_mode = 'tx' ";
+	}
+	$parameters['fax_uuid'] = $fax_uuid;
+	$parameters['domain_uuid'] = $domain_uuid;
 	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -351,6 +365,7 @@
 				//generate pdf from tif
 					$cmd_tif2pdf = "tiff2pdf -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$file_name.".pdf ".$dir_fax.'/'.$file_name.".tif";
 					exec($cmd_tif2pdf);
+					//echo $cmd_tif2pdf."<br >\n";
 				//clean up temporary files, if any
 					if (file_exists($dir_fax_temp.'/'.$file_name.'.pdf')) { @unlink($dir_fax_temp.'/'.$file_name.'.pdf'); }
 					if (file_exists($dir_fax_temp.'/'.$file_name.'.tif')) { @unlink($dir_fax_temp.'/'.$file_name.'.tif'); }
